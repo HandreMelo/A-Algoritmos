@@ -56,8 +56,9 @@ def criar_arestas(no_1, no_2, peso):
        print('Não existe vértices declarados para ligar este caminho')
 
 
-grafo = {'A': [['B', 'C'], ['1', '2']], 'B': [['C'], ['3']], 'C': [[], []]}
-#grafo = {}
+#grafo = {'A': [['B', 'C'], ['1', '9']], 'B': [['C'], ['3']], 'C': [[], []]}
+#grafo = {'A': [['H', 'C'], ['1', '1']], 'B': [['D', 'F'], ['2', '3']], 'C': [['B', 'F'], ['1', '20']], 'D': [['F', 'G'], ['4', '7']], 'E': [[], []], 'F': [['G'], ['2']], 'G': [['E'], ['1']], 'H': [[], []]}
+grafo = {}
 lista_vertices = []
 
 while (True):
@@ -115,15 +116,20 @@ while (True):
            peso_vvk=0
            peso_antes=999999
            for i in range(len(caminhos)):
-               for j in range(len(caminhos[i])):
+               #print(len(caminhos))
+               print('Caminho no : ' + str(i))
+               for j in range(len(caminhos[i])-1):
                    vertice_key = caminhos[i][j] #um vertice 'A':
                    adjacente_vk = caminhos[i][j+1]
                    valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
                    indice_adj = valores_vk[0].index(adjacente_vk)
+                   print('>'+valores_vk[1][indice_adj])
                    peso_vvk += int(valores_vk[1][indice_adj])
-           if peso_vvk<peso_antes:
-               peso_antes=peso_vvk
-           print(peso_vvk)       
+               if peso_vvk<peso_antes:
+                   #print(peso_vvk)
+                   peso_antes=peso_vvk
+                   peso_vvk=0
+           print('Menor peso : ' + str(peso_antes))       
        else:
            print('Este caminho não é possível')
    else:
