@@ -1,3 +1,18 @@
+############## Manipular a entrada de string ###############
+
+grafo=[]
+texto = "'A','B','C','D'"
+j=0
+for i in range(len(texto)):
+    if texto[i]!="'" and texto[i]!=",":
+        grafo.append(texto[i])
+        
+print(grafo)
+for i in range(len(grafo)):
+    print(grafo[i])
+
+
+####### LER ARQUIVO ##############
 def ler_arquivo():
    grafo_destino = {}
    arquivo_destino = open('destino.txt', 'r')
