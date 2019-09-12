@@ -39,31 +39,27 @@ public class GraphLogic {
         for(x=0;x<3;x++){
 
             for(y=0;y<grafo.size()-1;y++){
-                dadosMapa.add(x==0 ? grafo.get(x)[y].toString() : "999999999");
+                dadosMapa.add(x==0 ? grafo.get(x)[y] : "999999999");
             }
             mapaCaminho.add(dadosMapa);
+            dadosMapa = new ArrayList<>();
         }
-        mapaCaminho.get(0).get(1).replace(mapaCaminho.get(0).get(1).toString(),"0");
+        mapaCaminho.get(1).set(0,"0");
 
-        //aqui ja comeca a percorrer para achar o menor caminho com A como raiz
+        //aqui ja comeca a percorrer para achar o caminho com A como raiz
         for(x=0;x<grafo.size();x++){ //entender se 'X' começa em 0 ou 1
 
             for(y=1;y<grafo.size();y++){
-                if(!grafo.get(x)[y].equals(0)){
-                    int tempo =  Integer.parseInt(grafo.get(x)[y]);
-                    String vertAdj = grafo.get(y-1)[0];
-                    if(Integer.parseInt(mapaCaminho.get(y-1).get(1))>tempo){
-                        mapaCaminho.get(y-1).get(1)
-                                .replace(mapaCaminho.get(y-1).get(1).toString(),String.valueOf(tempo));
-                        mapaCaminho.get(y-1).get(2)
-                                .replace(mapaCaminho.get(y-1).get(2).toString(),grafo.get(x)[0]);
+                int tempo = Integer.parseInt(grafo.get(y)[x]);
+                if(tempo>0){
+                    String vertAdj = grafo.get(0)[y-1];
+                    if(Integer.parseInt(mapaCaminho.get(y).get(1))>tempo){ //aqui da treta
+                        mapaCaminho.get(y-1).set(1,String.valueOf(tempo));
+                        mapaCaminho.get(y).set(1,grafo.get(x)[0]);
                     }
                 }
             }
         }
     }
-
-
-
 
 }
