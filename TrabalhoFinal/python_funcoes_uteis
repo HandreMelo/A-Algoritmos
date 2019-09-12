@@ -30,7 +30,7 @@ def ler_arquivo():
 
    return ''
 
-########## LER ARQUIVO, MANIPULAR STRING E CONSTRUIR GRAFO (QUASE) #############
+########## LER ARQUIVO, MANIPULAR STRING E CONSTRUIR GRAFO #############
 
 vetor_ler = []
 arquivo_destino = open('grafo.txt', 'r')
@@ -45,10 +45,16 @@ for i in range(len(vetor_ler)):
     vetor_ler[i] = vetor_ler[i].replace("'", "").replace(',','')
 print(vetor_ler)
 grafo = {}
-#print(len(vetor_ler))
-n=4
+
+n = int(vetor_ler[0])
+adjacentes=[]
+pesos=[]
 for i in range(n):
     for j in range(n):
         if vetor_ler[i+2][j] != '0':
-           grafo[vetor_ler[1][i]] = [[vetor_ler[1][j]] , [vetor_ler[i+2][j]]]
+           adjacentes.append(vetor_ler[1][j])
+           pesos.append(vetor_ler[i+2][j])
+    grafo[vetor_ler[1][i]] = [adjacentes,pesos]
+    adjacentes=[]
+    pesos=[]
 print(grafo)
