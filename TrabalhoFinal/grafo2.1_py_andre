@@ -1,5 +1,26 @@
-def mostrar_conjunto():
-   print(grafo)
+def menor_caminho(caminhos):
+   if caminhos:  # Se a lista não estiver vazia
+      print('Todos os possíveos caminhos: ', caminhos)
+      print('teste : ')
+      peso_vvk=0
+      peso_antes=999999
+      for i in range(len(caminhos)):
+         #print(len(caminhos))
+         print('Caminho no : ' + str(i))
+         for j in range(len(caminhos[i])-1):
+            vertice_key = caminhos[i][j] #um vertice 'A':
+            adjacente_vk = caminhos[i][j+1]
+            valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
+            indice_adj = valores_vk[0].index(adjacente_vk)
+            print('>'+valores_vk[1][indice_adj])
+            peso_vvk += int(valores_vk[1][indice_adj])
+         if peso_vvk<peso_antes:
+            #print(peso_vvk)
+            peso_antes=peso_vvk
+            peso_vvk=0
+      print('Menor peso : ' + str(peso_antes))       
+   else:
+      print('Este caminho não é possível')
 
 def mostrar_caminho(dicionario):
    for key, value in dicionario.items():
@@ -85,7 +106,6 @@ while (True):
        break
 
    elif argument == '1':
-       #mostrar_conjunto()
        print(grafo) 
 
    elif argument == '2':
@@ -96,28 +116,7 @@ while (True):
        inicio_vertice = input('Diga qual o vértice de início: ')
        fim_vertice = input('Diga qual o vértice de saída: ')
        caminhos = list(depth_dirst_search(grafo, inicio_vertice, fim_vertice))
-       if caminhos:  # Se a lista não estiver vazia
-           print('Todos os possíveos caminhos: ', caminhos)
-           print('teste : ')
-           peso_vvk=0
-           peso_antes=999999
-           for i in range(len(caminhos)):
-               #print(len(caminhos))
-               print('Caminho no : ' + str(i))
-               for j in range(len(caminhos[i])-1):
-                   vertice_key = caminhos[i][j] #um vertice 'A':
-                   adjacente_vk = caminhos[i][j+1]
-                   valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
-                   indice_adj = valores_vk[0].index(adjacente_vk)
-                   print('>'+valores_vk[1][indice_adj])
-                   peso_vvk += int(valores_vk[1][indice_adj])
-               if peso_vvk<peso_antes:
-                   #print(peso_vvk)
-                   peso_antes=peso_vvk
-                   peso_vvk=0
-           print('Menor peso : ' + str(peso_antes))       
-       else:
-           print('Este caminho não é possível')
+       menor_caminho(caminhos)
    else:
        print('Valor incorreto')
 
