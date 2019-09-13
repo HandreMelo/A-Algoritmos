@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Executable;
 import java.util.*;
 
 public class GraphLogic {
@@ -46,20 +47,35 @@ public class GraphLogic {
         }
         mapaCaminho.get(1).set(0,"0");
 
-        //aqui ja comeca a percorrer para achar o caminho com A como raiz
-        for(x=0;x<grafo.size();x++){ //entender se 'X' começa em 0 ou 1
+        try {
+            //aqui ja comeca a percorrer para achar o caminho com A como raiz
+            for (y = 1; y < grafo.size(); y++) { //entender se 'X' começa em 0 ou 1
 
-            for(y=1;y<grafo.size();y++){
-                int tempo = Integer.parseInt(grafo.get(y)[x]);
-                if(tempo>0){
-                    String vertAdj = grafo.get(0)[y-1];
-                    if(Integer.parseInt(mapaCaminho.get(y).get(1))>tempo){ //aqui da treta
-                        mapaCaminho.get(y-1).set(1,String.valueOf(tempo));
-                        mapaCaminho.get(y).set(1,grafo.get(x)[0]);
+                for (x = 0; x < grafo.get(y).length; x++) {
+                    int tempo = Integer.parseInt(grafo.get(y)[x]);
+                    if (tempo > 0) {
+                        String vertAdj = grafo.get(0)[y - 1];
+                        if (y <= 2) {
+                            if (Integer.parseInt(mapaCaminho.get(1).get(y)) > tempo) { //aqui da treta
+                                mapaCaminho.get(1).set(y - 1, String.valueOf(tempo)); //joga o custo no mapa
+                                mapaCaminho.get(2).set(y - 1, grafo.get(0)[x]);  //joga o precedente no mapa
+                            }
+                        } else if (y > 2) {
+                            if (Integer.parseInt(mapaCaminho.get(1).get(y - 1)) > tempo) {
+                                mapaCaminho.get(1).set(y - 1, String.valueOf(tempo));
+                                mapaCaminho.get(2).set(y - 1, grafo.get(0)[x]);
+                            }
+                        }
+
                     }
                 }
             }
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        int i = 0;
     }
 
 }
