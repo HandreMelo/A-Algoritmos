@@ -3,13 +3,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.lang.reflect.Executable;
 import java.util.*;
 
 public class GraphLogic {
 
-    public void lerListaGrafo(){
+    public void lerListaGrafo(String rotaArquivo, String opc){
         String csvArquivo = "/Users/Phelipe Hass/IdeaProjects/arquivo.txt";
         BufferedReader conteudoCsv = null;
         String linha="";
@@ -17,7 +15,7 @@ public class GraphLogic {
         String[] armazena = {};
         List<String[]> dados = new ArrayList<String[]>();
         try {
-            conteudoCsv = new BufferedReader(new FileReader(csvArquivo));
+            conteudoCsv = new BufferedReader(new FileReader(rotaArquivo));
             while((linha = conteudoCsv.readLine())!=null){
 
                 armazena = linha.split(csvSeparador);
@@ -29,7 +27,9 @@ public class GraphLogic {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        encontraCaminho(dados);
+        if(opc.equals(2)) encontraCaminho(dados);
+        else if(opc.equals(3)) rotasFeitas();
+
 
     }
 
@@ -76,6 +76,10 @@ public class GraphLogic {
             e.printStackTrace();
         }
         int i = 0;
+    }
+
+    private void rotasFeitas(){
+
     }
 
 }

@@ -36,7 +36,7 @@ public class Main {
             System.out.println("---Menu---");
            // System.out.println("1 - Adicionar vertices");
             System.out.println("2 - Ler lista grafo");
-            System.out.println("3 - Calcular menor caminho");
+            System.out.println("3 - Ler lista de rotas");
             System.out.println("0 - Sair");
             dado = new Scanner(System.in);
 
@@ -49,11 +49,11 @@ public class Main {
                 }
 
                 case "2":{
-                     grafos.lerListaGrafo();
+                     grafos.lerListaGrafo("/Users/Phelipe Hass/IdeaProjects/arquivo.txt",dado.next());
                 } break;
 
                 case "3":{
-                    //grafos.menorCaminho(grafo);
+                    grafos.lerListaGrafo("/Users/Phelipe Hass/IdeaProjects/arquivo_rotas.txt",dado.next());
                 }
             }
 
