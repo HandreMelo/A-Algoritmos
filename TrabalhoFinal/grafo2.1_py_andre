@@ -1,9 +1,15 @@
+grafo = {}
+entregas = {}
+lucro = 0
+tempo = 0
+
 def menor_caminho(caminhos):
    if caminhos:  # Se a lista não estiver vazia
       print('Todos os possíveos caminhos: ', caminhos)
       print('teste : ')
       peso_vvk=0
       peso_antes=999999
+      no_caminho = 0
       for i in range(len(caminhos)):
          #print(len(caminhos))
          print('Caminho no : ' + str(i))
@@ -18,15 +24,19 @@ def menor_caminho(caminhos):
             #print(peso_vvk)
             peso_antes=peso_vvk
             peso_vvk=0
-      print('Menor peso : ' + str(peso_antes))       
+            no_caminho = i
+      tempo = peso_antes #tempo para este caminho, para ver se da tempo para outra entrega
+      print('Menor caminho : ' + str(caminhos[i]))
+      print('Menor peso : ' + str(peso_antes))
    else:
       print('Este caminho não é possível')
+   return caminhos[i],tempo
 
 def mostrar_caminho(dicionario):
    for key, value in dicionario.items():
        print(key, value)
 
-#dicionario = grafo
+
 def depth_dirst_search(dicionario, inicio, fim):
     #aqui é o tal TRAVA no primeiro
    print(dicionario[inicio])
@@ -56,7 +66,6 @@ def depth_dirst_search(dicionario, inicio, fim):
 def sair():
    return ""
 
-grafo = {}
 def ler_arquivo():
     vetor_ler = []
     arquivo_destino = open('grafo.txt', 'r')
@@ -70,11 +79,21 @@ def ler_arquivo():
 
     pesos = []
     vertices = []
+    ler_entregas = []
 
     n = int(vetor_ler[0])
+    e = int(vetor_ler[n+2])
+    #entregas.append(e);
     
     for i in range(2,n+2):
         pesos.append(vetor_ler[i].split(','))
+
+    for i in range(0,e):
+        ler_entregas.append(vetor_ler[n+3+i].split(','))
+
+    for i in range(e):
+       entregas[ler_entregas[i][1]] = [ler_entregas[i][0],ler_entregas[i][2]]
+    print(entregas)
 
     vertices.append(vetor_ler[1].split(','))
     vertices = vertices[0]
@@ -91,6 +110,28 @@ def ler_arquivo():
         adjacentes=[]
         pesos_temp=[]
 
+#entrega exemplo
+#entregas = {'B': ['0', '1'], 'C': ['5', '10'], 'D': ['10', '8']}
+caminho_lucro = []
+
+def fazer_entrega():
+   lucro = 0
+   tempo_pass = 0
+   destinos = list(entregas.keys())
+   #print(destinos)
+   for fim in destinos:
+      if (int(entregas[fim][0]) >= tempo_pass):
+         m_caminho,tempo = menor_caminho(list(depth_dirst_search(grafo, 'A', fim)))
+         lucro += int(entregas[fim][1])
+         caminho_lucro.append(m_caminho)
+         caminho_lucro.append(entregas[fim][1])
+         tempo_pass += (2*tempo)
+         print("Tempo Passado")
+         print(tempo_pass)
+   print("Caminhos lucrativos")
+   print(caminho_lucro)
+   print("Lucro Total: " + str(lucro))
+      
 lista_vertices = []
 ler_arquivo()
 while (True):
@@ -98,9 +139,10 @@ while (True):
    print('Digite 1: Mostrar os conjuntos de vértices e arestas')
    print('Digite 2: Responder se um vértice é alcançável diretamente a partir de outro')
    print('Digite 3: Depth Dirst Search:')
+   print('Digite 4: Fazer Entregas:')
    print('Digite 0: Sair')
    argument = input()
-    
+   
    if argument == '0':
        print('Programa Finalizado')
        break
@@ -117,6 +159,10 @@ while (True):
        fim_vertice = input('Diga qual o vértice de saída: ')
        caminhos = list(depth_dirst_search(grafo, inicio_vertice, fim_vertice))
        menor_caminho(caminhos)
+   elif argument == '4':
+      fazer_entrega()
+      #print(caminhos)
+      #print(tempo)
    else:
        print('Valor incorreto')
 
