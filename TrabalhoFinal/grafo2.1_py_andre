@@ -67,11 +67,11 @@ def menor_caminho(caminhos):
             peso_vvk=0
             no_caminho = i
       tempo = peso_antes #tempo para este caminho, para ver se da tempo para outra entrega
-      print('Menor caminho : ' + str(caminhos[i]))
+      print('Menor caminho : ' + str(caminhos[no_caminho]))
       print('Menor peso : ' + str(peso_antes))
    else:
       print('Este caminho não é possível')
-   return caminhos[i],tempo
+   return caminhos[no_caminho],tempo
 
 #########MOSTRAR CAMINHO################
 def mostrar_listas():
