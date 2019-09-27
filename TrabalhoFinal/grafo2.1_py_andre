@@ -1,62 +1,7 @@
-def menor_caminho(caminhos):
-   if caminhos:  # Se a lista não estiver vazia
-      print('Todos os possíveos caminhos: ', caminhos)
-      print('teste : ')
-      peso_vvk=0
-      peso_antes=999999
-      for i in range(len(caminhos)):
-         #print(len(caminhos))
-         print('Caminho no : ' + str(i))
-         for j in range(len(caminhos[i])-1):
-            vertice_key = caminhos[i][j] #um vertice 'A':
-            adjacente_vk = caminhos[i][j+1]
-            valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
-            indice_adj = valores_vk[0].index(adjacente_vk)
-            print('>'+valores_vk[1][indice_adj])
-            peso_vvk += int(valores_vk[1][indice_adj])
-         if peso_vvk<peso_antes:
-            #print(peso_vvk)
-            peso_antes=peso_vvk
-            peso_vvk=0
-      print('Menor peso : ' + str(peso_antes))       
-   else:
-      print('Este caminho não é possível')
-
-def mostrar_caminho(dicionario):
-   for key, value in dicionario.items():
-       print(key, value)
-
-#dicionario = grafo
-def depth_dirst_search(dicionario, inicio, fim):
-    #aqui é o tal TRAVA no primeiro
-   print(dicionario[inicio])
-   pilha = [(inicio, [inicio])]
-
-   #for key, value in test_dict.items(): 
-   #print (key, value) 
-
-   while pilha:
-        #o *vertice é um único valor e *caminho uma lista de vertices...
-        #...extraídos de *pilha, por isso,while pilha, porque ela tende a ficar vazia
-       vertice, caminho = pilha.pop()
-    #dicionario[vertice][0] - caminho, segue a lista até não haver Não repetidos
-    #o set(dicionario[v][0] - set(caminho) esta testando se esse vertice ja nao existe na lista caminho.
-       for proximo in set(dicionario[vertice][0]) - set(caminho):
-           if proximo == fim:
-               yield caminho + [proximo]
-           else:
-            #e aqui, enquanto não achar, adiciona na pilha quem vai ser o proximo a ser analisado e..
-            #...já colocando como caminho passado
-               pilha.append((proximo, caminho + [proximo]))
-
-#A set is an unordered collection with no duplicate elements. 
-#Basic uses include membership testing and eliminating duplicate entries.
-
-
-def sair():
-   return ""
-
 grafo = {}
+entregas = {}
+lucro = 0
+tempo = 0
 def ler_arquivo():
     vetor_ler = []
     arquivo_destino = open('grafo.txt', 'r')
@@ -70,11 +15,20 @@ def ler_arquivo():
 
     pesos = []
     vertices = []
+    ler_entregas = []
 
     n = int(vetor_ler[0])
+    e = int(vetor_ler[n+2])
+    #entregas.append(e);
     
     for i in range(2,n+2):
         pesos.append(vetor_ler[i].split(','))
+
+    for i in range(0,e):
+        ler_entregas.append(vetor_ler[n+3+i].split(','))
+
+    for i in range(e):
+       entregas[ler_entregas[i][1]] = [ler_entregas[i][0],ler_entregas[i][2]]
 
     vertices.append(vetor_ler[1].split(','))
     vertices = vertices[0]
@@ -90,35 +44,113 @@ def ler_arquivo():
         grafo[vertices[i]] = [adjacentes,pesos_temp]
         adjacentes=[]
         pesos_temp=[]
+#########MENOR CAMINHO################
+def menor_caminho(caminhos):
+   if caminhos:  # Se a lista não estiver vazia
+      print('Todos os caminhos possiveis: ', caminhos)
+      peso_vvk=0
+      peso_antes=999999
+      no_caminho = 0
+      i=0
+      for i in range(len(caminhos)):
+         print('Caminho no : ' + str(i))
+         for j in range(len(caminhos[i])-1):
+            vertice_key = caminhos[i][j] #um vertice 'A':
+            adjacente_vk = caminhos[i][j+1]
+            valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
+            indice_adj = valores_vk[0].index(adjacente_vk)
+            print('>'+valores_vk[1][indice_adj])
+            peso_vvk += int(valores_vk[1][indice_adj])
+         if peso_vvk<peso_antes:
+            #print(peso_vvk)
+            peso_antes=peso_vvk
+            peso_vvk=0
+            no_caminho = i
+      tempo = peso_antes #tempo para este caminho, para ver se da tempo para outra entrega
+      print('Menor caminho : ' + str(caminhos[no_caminho]))
+      print('Menor peso : ' + str(peso_antes))
+   else:
+      print('Este caminho não é possível')
+   return caminhos[no_caminho],tempo
 
+#########MOSTRAR CAMINHO################
+def mostrar_listas():
+   print("----Grafo-----")
+   print(grafo)
+   print("---Entregas---")
+   print(entregas)
+   print("--------------")
+
+def depth_dirst_search(dicionario, inicio, fim):
+   print(dicionario[inicio])
+   pilha = [(inicio, [inicio])]
+   while pilha:
+       vertice, caminho = pilha.pop()
+       for proximo in set(dicionario[vertice][0]) - set(caminho):
+           if proximo == fim:
+               yield caminho + [proximo]
+           else:
+               pilha.append((proximo, caminho + [proximo]))
+
+#A set is an unordered collection with no duplicate elements. 
+#Basic uses include membership testing and eliminating duplicate entries.
+
+
+def sair():
+   return ""
+
+
+#entrega exemplo
+#entregas = { 'vertice':['tempo_saida','lucro_da_entrega'],...}
+#entregas = {'B': ['0', '1'], 'C': ['5', '10'], 'D': ['10', '8']}
+caminho_lucro = []
+
+def fazer_entrega():
+   lucro = 0
+   tempo_pass = 0
+
+   for fim in list(entregas.keys()):
+      
+      tempo_saida = int(entregas[fim][0])
+      lucro_da_entrega = int(entregas[fim][1])
+      
+      if ( tempo_saida >= tempo_pass):
+         m_caminho,tempo = menor_caminho(list(depth_dirst_search(grafo, 'A', fim)))
+         lucro += lucro_da_entrega
+         caminho_lucro.append(m_caminho)
+         caminho_lucro.append(entregas[fim][1])
+         tempo_pass += (2*tempo)
+         print("Tempo Passado")
+         print(tempo_pass)
+         
+   print("Caminhos lucrativos")
+   print(caminho_lucro)
+   print("Lucro Total: " + str(lucro))
+      
 lista_vertices = []
 ler_arquivo()
-while (True):
 
-   print('Digite 1: Mostrar os conjuntos de vértices e arestas')
-   print('Digite 2: Responder se um vértice é alcançável diretamente a partir de outro')
-   print('Digite 3: Depth Dirst Search:')
-   print('Digite 0: Sair')
-   argument = input()
-    
-   if argument == '0':
-       print('Programa Finalizado')
-       break
+def main():
+   
+   while (True):
 
-   elif argument == '1':
-       print(grafo) 
+      print('Digite 1: Mostrar o grafo e a lista de entregas')
+      print('Digite 2: Fazer Entregas:')
+      print('Digite 0: Sair')
+      argument = input()
+      
+      if argument == '0':
+          print('Programa Finalizado')
+          break
 
-   elif argument == '2':
-       mostrar_caminho(grafo)
+      elif argument == '1':
+          mostrar_listas()
+          
+      elif argument == '2':  
+         fazer_entrega()
+         
+      else:
+          print('Valor incorreto')
 
-   elif argument == '3':
-       
-       inicio_vertice = input('Diga qual o vértice de início: ')
-       fim_vertice = input('Diga qual o vértice de saída: ')
-       caminhos = list(depth_dirst_search(grafo, inicio_vertice, fim_vertice))
-       menor_caminho(caminhos)
-   else:
-       print('Valor incorreto')
-
-# https://pt.stackoverflow.com/questions/67593/grafo-caminhos-poss%C3%ADveis-python
-# algoritmo de dijkstra
+if __name__ == "__main__":
+   main()
