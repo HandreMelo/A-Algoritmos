@@ -1,18 +1,30 @@
 ############## Manipular a entrada de string ###############
 
-grafo=[]
+grafo_teste_1=[]
 texto = "'A','B','C','D'"
 j=0
 for i in range(len(texto)):
     if texto[i]!="'" and texto[i]!=",":
-        grafo.append(texto[i])
+        grafo_teste_1.append(texto[i])
         
-print(grafo)
-for i in range(len(grafo)):
-    print(grafo[i])
+print(grafo_teste_1)
+for i in range(len(grafo_teste_1)):
+    print(grafo_teste_1[i])
 
 
-####### LER ARQUIVO ##############
+########### Método para tirar caracteres especiais de uma string ###########
+
+palavra = "'A','B','C','D'"
+print(palavra)
+palavra1 = palavra.replace("'", "").replace(',','')
+print(palavra1)
+grafo_teste_2 = {}
+grafo_teste_2[palavra1[0]] = [palavra1[1], palavra1[2]]
+print(grafo_teste_2)
+
+
+############## LER ARQUIVO ##############
+
 def ler_arquivo():
    grafo_destino = {}
    arquivo_destino = open('destino.txt', 'r')
@@ -29,6 +41,7 @@ def ler_arquivo():
    arquivo_entregas.close()
 
    return ''
+
 
 ########## LER ARQUIVO, MANIPULAR STRING E CONSTRUIR GRAFO #############
 
