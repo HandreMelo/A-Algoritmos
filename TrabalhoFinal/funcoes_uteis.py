@@ -23,7 +23,7 @@ grafo_teste_2[palavra1[0]] = [palavra1[1], palavra1[2]]
 print(grafo_teste_2)
 
 
-############## LER ARQUIVO ##############
+############## LER ARQUIVO 1 ##############
 
 def ler_arquivo():
    grafo_destino = {}
@@ -43,6 +43,26 @@ def ler_arquivo():
    return ''
 
 
+################ LER ARQUIVO 2 #############
+
+def ler_arquivo():
+   grafo_destino = {}
+   arquivo_destino = open('destino.txt', 'r')
+
+   for vertice in arquivo_destino:
+       linha = vertice.strip()
+       grafo_destino.update({linha[0]: [linha[2], linha[4]]})
+       print(linha)
+
+   print(grafo_destino)
+   arquivo_destino.close()
+
+   arquivo_entregas = open('entregas.txt', 'r')
+   arquivo_entregas.close()
+
+   return ''
+
+   
 ########## LER ARQUIVO, MANIPULAR STRING E CONSTRUIR GRAFO #############
 
 vetor_ler = []
