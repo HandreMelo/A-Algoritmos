@@ -1,158 +1,176 @@
-def calcular_grau(chave):
-   return len(grafo[chave][0])
-
-
-def mostrar_conjunto():
-   print(grafo)
-
-
-def mostrar_caminho(dicionario):
-   for key, value in dicionario.items():
-       print(key, value)
-
-#dicionario = grafo
-def depth_dirst_search(dicionario, inicio, fim):
-    #aqui é o tal TRAVA no primeiro
-   print(dicionario[inicio])
-   pilha = [(inicio, [inicio])]
-
-   #for key, value in test_dict.items(): 
-   #print (key, value) 
-
-   while pilha:
-        #o *vertice é um único valor e *caminho uma lista de vertices...
-        #...extraídos de *pilha, por isso,while pilha, porque ela tende a ficar vazia
-       vertice, caminho = pilha.pop()
-    #dicionario[vertice][0] - caminho, segue a lista até não haver Não repetidos
-    #o set(dicionario[v][0] - set(caminho) esta testando se esse vertice ja nao existe na lista caminho.
-       for proximo in set(dicionario[vertice][0]) - set(caminho):
-           if proximo == fim:
-               yield caminho + [proximo]
-           else:
-            #e aqui, enquanto não achar, adiciona na pilha quem vai ser o proximo a ser analisado e..
-            #...já colocando como caminho passado
-               pilha.append((proximo, caminho + [proximo]))
-
-#A set is an unordered collection with no duplicate elements. 
-#Basic uses include membership testing and eliminating duplicate entries.
-
-
-def sair():
-   return ""
-
-def criar_vertices(lista):
-    print()
-
-def criar_arestas(no_1, no_2, peso):
-    print()
 grafo = {}
+entregas = {}
+
 def ler_arquivo():
     vetor_ler = []
     arquivo_destino = open('grafo.txt', 'r')
     for linha in arquivo_destino:
-        vetor_ler.append(linha.strip())
-        
+        vetor_ler.append(linha.strip())        
 
-    print(vetor_ler)
     arquivo_destino.close()
 
     for i in range(len(vetor_ler)):
-        vetor_ler[i] = vetor_ler[i].replace("'", "").replace(',','')
-    print(vetor_ler)
+        vetor_ler[i] = vetor_ler[i].replace("'", "").replace("‘","").replace("’","")
+
+    pesos = []
+    vertices = []
+    ler_entregas = []
 
     n = int(vetor_ler[0])
+    e = int(vetor_ler[n+2])
+    #entregas.append(e);
+    
+    for i in range(2,n+2):
+        pesos.append(vetor_ler[i].split(','))
+
+    for i in range(0,e):
+        ler_entregas.append(vetor_ler[n+3+i].split(','))
+
+    for i in range(e):
+       entregas[ler_entregas[i][1]] = [ler_entregas[i][0],ler_entregas[i][2]]
+
+    vertices.append(vetor_ler[1].split(','))
+    vertices = vertices[0]
+
     adjacentes=[]
-    pesos=[]
+    pesos_temp=[]
+    
     for i in range(n):
         for j in range(n):
-            if vetor_ler[i+2][j] != '0':
-               adjacentes.append(vetor_ler[1][j])
-               pesos.append(vetor_ler[i+2][j])
-        grafo[vetor_ler[1][i]] = [adjacentes,pesos]
+            if pesos[i][j] != '0':
+               adjacentes.append(vertices[j])
+               pesos_temp.append(pesos[i][j])
+        grafo[vertices[i]] = [adjacentes,pesos_temp]
         adjacentes=[]
-        pesos=[]
-    print(grafo)
+        pesos_temp=[]
+#### fim - ler arquivo ####
+
+#########MOSTRAR CAMINHO################
+def mostrar_listas():
+   print("----Grafo-----")
+   print(grafo)
+   print("---Entregas---")
+   print(entregas)
+   print("--------------")
+
+#### calcular_peso ####
+def calcular_peso(teste):
+    peso=0
+    while(len(teste)>1):
+        v=teste.pop()
+        a=teste.pop()
+        indice = grafo[v][0].index(a)
+        peso+=int(grafo[v][1][indice])
+    if(teste):
+        v=a
+        a=teste.pop()
+        indice = grafo[v][0].index(a)
+        peso+=int(grafo[v][1][indice])
+    return(peso)
+
+###### depth_first_searsh modificada para retornar o menor caminho ######
+def depth_dirst_search(dicionario, inicio, fim):
+   pilha = [(inicio, [inicio])]
+   pesoTesteAntes = 99999
+
+   pesoTeste=0
+   menor_caminho=[]
+   menor_peso=0
+   while pilha:
+       vertice, caminho = pilha.pop()
+       for proximo in set(dicionario[vertice][0]) - set(caminho):
+           if proximo == fim:
+               pesoTeste = calcular_peso(list(caminho+[proximo]))
+               if pesoTeste < pesoTesteAntes:
+                   menor_peso=pesoTeste
+                   menor_caminho = list(caminho+[proximo])
+                   pesoTesteAntes=pesoTeste
+               break
+           else:
+               pilha.append((proximo, caminho + [proximo]))
+
+   return menor_caminho,menor_peso
+
+#entrega exemplo
+#entregas = { 'vertice':['tempo_saida','lucro_da_entrega'],...}
+#entregas = {'B': ['0', '1'], 'C': ['5', '10'], 'D': ['10', '8']}
+#grafo do arquivo = {'A': [['B', 'D'], ['5', '2']], 'B': [['A', 'C'], ['5', '3']],
+#                    'C': [['B', 'D'], ['3', '8']], 'D': [['A', 'C'], ['2', '8']]}
 
 
-#grafo = {'A': [['B', 'C'], ['1', '9']], 'B': [['C'], ['3']], 'C': [[], []]}
-#grafo = {'A': [['H', 'C'], ['1', '1']], 'B': [['D', 'F'], ['2', '3']], 'C': [['B', 'F'], ['1', '20']], 'D': [['F', 'G'], ['4', '7']], 'E': [[], []], 'F': [['G'], ['2']], 'G': [['E'], ['1']], 'H': [[], []]}
-#grafo = {}
-lista_vertices = []
+######### REALIZAR ENTREGAS ############
 
-while (True):
-   print('Digite 1: Adicionar vértices e Arestas')
-   print('Digite 2: Calcular o grau de um dado vértice')
-   print('Digite 3: Mostrar os conjuntos de vértices e arestas')
-   print('Digite 4: Responder se um vértice é alcançável diretamente a partir de outro')
-   print('Digite 5: Depth Dirst Search:')
-   print('Digite 0: Sair')
-   argument = input()
+
+def fazer_entrega():
+    caminhos_lucrativos={}
+
+    entregas_keys = list(entregas.keys()) 
+    lucro_total=0 #somatória do lucro em um caminho
+    tempo = 0 #é o tempo do menor caminho encontrado para aquele par de vertices
     
-   if argument == '0':
-       print('Programa Finalizado')
-       break
+    for tentativa in entregas_keys: #essa parte não está bem otimizado, poderia ficar melhor
+        print("tentativa : " + tentativa)
+        lucro_total = 0
+        lucro_total += int(entregas[tentativa][1])
+        caminho_lucro = []
+        menor_caminho,tempo = depth_dirst_search(grafo, 'A', tentativa)
+        tempo_pass = 0
+        tempo_pass += (2*tempo) #tempo de ida e volta até o destino de entrega
+        caminho_lucro += tentativa #adiciona o vertice da tentativa inicial
+        
+        for fim in list(set(entregas_keys)-set([tentativa])): #fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
+            print("fim : " + fim)
+            tempo_saida = int(entregas[fim][0])
+            
+            menor_caminho,tempo = depth_dirst_search(grafo, 'A', fim)
+            #menor_caminho = ['A','D'], tempo = 10
 
-   elif argument == '1':
-       print('Adicione os vértices (em maiúsculo): ')
-       while (True):
-           elemento = input()
-           if elemento == '0':
-               break
-           else:
-               lista_vertices.append(elemento)
-       criar_vertices(lista_vertices)
+            if ( tempo_saida >= tempo_pass):
+                lucro_total+= int(entregas[fim][1]) #lucro_da_entrega = 2
+                tempo_pass += (2*tempo)
+                caminho_lucro += fim
+                print("Menor caminho: " + str(menor_caminho))
+                print("Tempo Passado : " + str(tempo_pass))
+                print()
+        caminhos_lucrativos[tentativa]=[]
+        caminhos_lucrativos[tentativa] += [[caminho_lucro] + [str(lucro_total)]]
+        
+                
 
-       print('Adicione as arestas (em maiúsculo), para sair 0 e 0: ')
-       while True:
-           aresta_x = input('De: ')
-           aresta_y = input('Para: ')
-           if aresta_x == '0' or aresta_y == '0':
-               break
-           else:
-               valor = input('Peso: ')
-               criar_arestas(aresta_x, aresta_y, valor)
 
-   elif argument == '2':
-       maior_grau = max(grafo, key=calcular_grau)
-       print(maior_grau)
-       print(grafo[maior_grau][0])
+#ja consigo todos os caminhos e lucros, só falta ver qual mais lucrativo         
+    print("Caminhos lucrativos")
+    print(caminhos_lucrativos)
+    caminhos = list(caminhos_lucrativos.values())
+    cami = list(caminhos[0:])
 
-   elif argument == '3':
-       mostrar_conjunto()
-       print(grafo.values()) 
+    print()
 
-   elif argument == '4':
-       mostrar_caminho(grafo)
+######## MAIN ##############
+lista_vertices = []
+ler_arquivo()
 
-   elif argument == '5':
-       ler_arquivo()
-       inicio_vertice = input('Diga qual o vértice de início: ')
-       fim_vertice = input('Diga qual o vértice de saída: ')
-       caminhos = list(depth_dirst_search(grafo, inicio_vertice, fim_vertice))
-       if caminhos:  # Se a lista não estiver vazia
-           print('Todos os possíveos caminhos: ', caminhos)
-           print('teste : ')
-           peso_vvk=0
-           peso_antes=999999
-           for i in range(len(caminhos)):
-               #print(len(caminhos))
-               print('Caminho no : ' + str(i))
-               for j in range(len(caminhos[i])-1):
-                   vertice_key = caminhos[i][j] #um vertice 'A':
-                   adjacente_vk = caminhos[i][j+1]
-                   valores_vk = grafo[vertice_key] #valores desse vertice 'A': -> [['B','C']['1','2']]
-                   indice_adj = valores_vk[0].index(adjacente_vk)
-                   print('>'+valores_vk[1][indice_adj])
-                   peso_vvk += int(valores_vk[1][indice_adj])
-               if peso_vvk<peso_antes:
-                   #print(peso_vvk)
-                   peso_antes=peso_vvk
-                   peso_vvk=0
-           print('Menor peso : ' + str(peso_antes))       
-       else:
-           print('Este caminho não é possível')
-   else:
-       print('Valor incorreto')
+def main():
+   
+   while (True):
 
-# https://pt.stackoverflow.com/questions/67593/grafo-caminhos-poss%C3%ADveis-python
-# algoritmo de dijkstra
+      print('Digite 1: Mostrar o grafo e a lista de entregas')
+      print('Digite 2: Fazer Entregas:')
+      print('Digite 0: Sair')
+      argument = input()
+      
+      if argument == '0':
+          print('Programa Finalizado')
+          break
+
+      elif argument == '1':
+          mostrar_listas()
+          
+      elif argument == '2':  
+         fazer_entrega()
+         
+      else:
+          print('Valor incorreto')
+
+if __name__ == "__main__":
+   main()
