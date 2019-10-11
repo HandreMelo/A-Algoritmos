@@ -40,25 +40,43 @@ def depth_dirst_search(dicionario, inicio, fim):
 def sair():
    return ""
 
-
 def criar_vertices(lista):
-   for x in range(len(lista)):
-       if not lista[x] in grafo:
-           for key in lista[x]:
-               grafo[key] = [[],[]]
-
+    print()
 
 def criar_arestas(no_1, no_2, peso):
-   if no_1 in grafo and no_2 in grafo:
-       grafo[no_1][0] += no_2
-       grafo[no_1][1] += peso
-   else:
-       print('Não existe vértices declarados para ligar este caminho')
+    print()
+grafo = {}
+def ler_arquivo():
+    vetor_ler = []
+    arquivo_destino = open('grafo.txt', 'r')
+    for linha in arquivo_destino:
+        vetor_ler.append(linha.strip())
+        
+
+    print(vetor_ler)
+    arquivo_destino.close()
+
+    for i in range(len(vetor_ler)):
+        vetor_ler[i] = vetor_ler[i].replace("'", "").replace(',','')
+    print(vetor_ler)
+
+    n = int(vetor_ler[0])
+    adjacentes=[]
+    pesos=[]
+    for i in range(n):
+        for j in range(n):
+            if vetor_ler[i+2][j] != '0':
+               adjacentes.append(vetor_ler[1][j])
+               pesos.append(vetor_ler[i+2][j])
+        grafo[vetor_ler[1][i]] = [adjacentes,pesos]
+        adjacentes=[]
+        pesos=[]
+    print(grafo)
 
 
 #grafo = {'A': [['B', 'C'], ['1', '9']], 'B': [['C'], ['3']], 'C': [[], []]}
 #grafo = {'A': [['H', 'C'], ['1', '1']], 'B': [['D', 'F'], ['2', '3']], 'C': [['B', 'F'], ['1', '20']], 'D': [['F', 'G'], ['4', '7']], 'E': [[], []], 'F': [['G'], ['2']], 'G': [['E'], ['1']], 'H': [[], []]}
-grafo = {}
+#grafo = {}
 lista_vertices = []
 
 while (True):
@@ -106,7 +124,8 @@ while (True):
    elif argument == '4':
        mostrar_caminho(grafo)
 
-   elif argument == '5': 
+   elif argument == '5':
+       ler_arquivo()
        inicio_vertice = input('Diga qual o vértice de início: ')
        fim_vertice = input('Diga qual o vértice de saída: ')
        caminhos = list(depth_dirst_search(grafo, inicio_vertice, fim_vertice))
