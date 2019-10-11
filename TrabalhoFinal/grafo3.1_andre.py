@@ -99,50 +99,41 @@ def depth_dirst_search(dicionario, inicio, fim):
 
 
 ######### REALIZAR ENTREGAS ############
-
+def calcular_tempo(vertice):
+    lucro = int(entregas[vertice][1])
+    menor_caminho,tempo = depth_dirst_search(grafo, 'A', vertice)
+    return lucro, 2*tempo
 
 def fazer_entrega():
     caminhos_lucrativos={}
-
+    caminhos_lucrativos2={}
     entregas_keys = list(entregas.keys()) 
-    lucro_total=0 #somatória do lucro em um caminho
-    tempo = 0 #é o tempo do menor caminho encontrado para aquele par de vertices
     
-    for tentativa in entregas_keys: #essa parte não está bem otimizado, poderia ficar melhor
-        print("tentativa : " + tentativa)
+    for tentativa in entregas_keys:
         lucro_total = 0
-        lucro_total += int(entregas[tentativa][1])
-        caminho_lucro = []
-        menor_caminho,tempo = depth_dirst_search(grafo, 'A', tentativa)
         tempo_pass = 0
-        tempo_pass += (2*tempo) #tempo de ida e volta até o destino de entrega
-        caminho_lucro += tentativa #adiciona o vertice da tentativa inicial
+        caminho_lucro = []
+        lucro, tempo = calcular_tempo(tentativa)
+        tempo_pass+=tempo
+        lucro_total+=lucro
         
         for fim in list(set(entregas_keys)-set([tentativa])): #fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
-            print("fim : " + fim)
+
             tempo_saida = int(entregas[fim][0])
             
-            menor_caminho,tempo = depth_dirst_search(grafo, 'A', fim)
-            #menor_caminho = ['A','D'], tempo = 10
-
             if ( tempo_saida >= tempo_pass):
-                lucro_total+= int(entregas[fim][1]) #lucro_da_entrega = 2
-                tempo_pass += (2*tempo)
+                lucro, tempo = calcular_tempo(fim)
+                tempo_pass+=tempo
+                lucro_total+=lucro
                 caminho_lucro += fim
-                print("Menor caminho: " + str(menor_caminho))
-                print("Tempo Passado : " + str(tempo_pass))
-                print()
+
         caminhos_lucrativos[tentativa]=[]
-        caminhos_lucrativos[tentativa] += [[caminho_lucro] + [str(lucro_total)]]
-        
-                
+        caminhos_lucrativos2[tentativa]=[]
+        caminhos_lucrativos[tentativa] += [lucro_total] + caminho_lucro
 
-
-#ja consigo todos os caminhos e lucros, só falta ver qual mais lucrativo         
     print("Caminhos lucrativos")
     print(caminhos_lucrativos)
-    caminhos = list(caminhos_lucrativos.values())
-    cami = list(caminhos[0:])
+    print(max(caminhos_lucrativos.values()))
 
     print()
 
