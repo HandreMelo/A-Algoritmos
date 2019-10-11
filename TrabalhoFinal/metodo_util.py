@@ -1,4 +1,4 @@
-########### Método para tirar caracteres especiais de uma string
+########### Método para tirar caracteres especiais de uma string ###########
 
 palavra = "'A','B','C','D'"
 print(palavra)
