@@ -1,9 +1,0 @@
-########### Método para tirar caracteres especiais de uma string ###########
-
-palavra = "'A','B','C','D'"
-print(palavra)
-palavra1 = palavra.replace("'", "").replace(',','')
-print(palavra1)
-grafo = {}
-grafo[palavra1[0]] = [palavra1[1], palavra1[2]]
-print(grafo)
