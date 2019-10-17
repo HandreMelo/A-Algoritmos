@@ -22,13 +22,13 @@ eficiencia = (n!^n!)!
 
 ######### TRATATIVAS ###########
 
-1a linha -> caracter tem de ser número
-2a linha -> número de Vertices tem de ser = ao número da 1a linha
+1a linha -> caracter tem de ser número - TRATADO
+2a linha -> número de Vertices tem de ser = ao número da 1a linha - TRATADO
 2a linha -> deve ter o padrão 'vertice','ultimo vertice' (tratativa geral)
 3a - linha N -> vertices iguais deve conter 0 e ser número
 3a - linha N -> deve ser número e positivo
-3a - linha N -> número de colunas = número de vertices
+3a - linha N -> número de colunas = número de vertices - TRATADO
 
-linha número de entregas -> deve ser número
-entregas -> número de linhas = número de entregas
+linha número de entregas -> deve ser número - TRATADO
+entregas -> número de linhas = número de entregas - TRATADO
 entregas -> número de colunas = 3
