@@ -149,6 +149,8 @@ def fazer_entrega():
         print()
     except ValueError:
         print("Econtrado valores inválidos no dicionário")
+    except KeyError:
+        print("Ocorreu um erro causado por matriz mal definida no arquivo")
 
 
 ######## MAIN ##############
