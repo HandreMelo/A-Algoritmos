@@ -25,6 +25,14 @@ def ler_arquivo():
         for i in range(2, n + 2):
             pesos.append(vetor_ler[i].split(','))
 
+        for i in range(0, len(pesos)):
+            for x in range(0, len(pesos[i])):
+                pesoAtual = int(pesos[i][x])
+                if pesoAtual < 0:
+                    pesoAtual *= -1
+                    pesos[i][x] = str(pesoAtual)
+
+
         for i in range(0, e):
             ler_entregas.append(vetor_ler[n + 3 + i].split(','))
 
