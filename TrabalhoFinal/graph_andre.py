@@ -1,7 +1,6 @@
 grafo = {}
 entregas = {}
 
-
 def ler_arquivo():
     vetor_ler = []
     arquivo_destino = open('grafo.txt', 'r')
@@ -20,7 +19,6 @@ def ler_arquivo():
 
         n = int(vetor_ler[0])
         e = int(vetor_ler[n + 2])
-        # entregas.append(e);
 
         for i in range(2, n + 2):
             pesos.append(vetor_ler[i].split(','))
@@ -32,7 +30,6 @@ def ler_arquivo():
                     pesoAtual *= -1
                     pesos[i][x] = str(pesoAtual)
 
-
         for i in range(0, e):
             ler_entregas.append(vetor_ler[n + 3 + i].split(','))
 
@@ -41,7 +38,6 @@ def ler_arquivo():
 
         vertices.append(vetor_ler[1].split(','))
         vertices = vertices[0]
-
         adjacentes = []
         pesos_temp = []
 
@@ -68,7 +64,6 @@ def mostrar_listas():
     print(entregas)
     print("--------------")
 
-
 #### calcular_peso ####
 def calcular_peso(teste):
     peso = 0
@@ -83,7 +78,6 @@ def calcular_peso(teste):
         indice = grafo[v][0].index(a)
         peso += int(grafo[v][1][indice])
     return (peso)
-
 
 ###### depth_first_searsh modificada para retornar o menor caminho ######
 def depth_dirst_search(dicionario, inicio, fim):
@@ -108,20 +102,17 @@ def depth_dirst_search(dicionario, inicio, fim):
 
     return menor_caminho, menor_peso
 
-
 # entrega exemplo
 # entregas = { 'vertice':['tempo_saida','lucro_da_entrega'],...}
 # entregas = {'B': ['0', '1'], 'C': ['5', '10'], 'D': ['10', '8']}
 # grafo do arquivo = {'A': [['B', 'D'], ['5', '2']], 'B': [['A', 'C'], ['5', '3']],
 #                    'C': [['B', 'D'], ['3', '8']], 'D': [['A', 'C'], ['2', '8']]}
 
-
 ######### REALIZAR ENTREGAS ############
 def calcular_tempo(vertice):
     lucro = int(entregas[vertice][1])
     menor_caminho, tempo = depth_dirst_search(grafo, 'A', vertice)
     return lucro, 2 * tempo
-
 
 def fazer_entrega():
     caminhos_lucrativos = {}
@@ -137,8 +128,8 @@ def fazer_entrega():
             tempo_pass += tempo
             lucro_total += lucro
 
-            for fim in list(set(entregas_keys) - set(
-                    [tentativa])):  # fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
+            for fim in list(set(entregas_keys) - set([tentativa])):
+                # fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
 
                 tempo_saida = int(entregas[fim][0])
 
@@ -160,11 +151,9 @@ def fazer_entrega():
     except KeyError:
         print("Ocorreu um erro causado por matriz mal definida no arquivo")
 
-
 ######## MAIN ##############
 lista_vertices = []
 ler_arquivo()
-
 
 def main():
     while (True):
@@ -186,7 +175,6 @@ def main():
 
         else:
             print('Valor incorreto')
-
 
 if __name__ == "__main__":
     main()
