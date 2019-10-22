@@ -67,41 +67,46 @@ def mostrar_listas():
 
 #### calcular_peso ####
 def calcular_peso(teste):
-    peso = 0
-    while (len(teste) > 1):
-        v = teste.pop()
-        a = teste.pop()
+    peso=0
+    while(len(teste)>2):
+        a=teste.pop()
+        v=teste[len(teste)-1]
         indice = grafo[v][0].index(a)
-        peso += int(grafo[v][1][indice])
-    if (teste):
-        v = a
-        a = teste.pop()
+        peso+=int(grafo[v][1][indice])
+    if(teste):
+        a=teste.pop()
+        v=teste[len(teste)-1]
         indice = grafo[v][0].index(a)
-        peso += int(grafo[v][1][indice])
-    return (peso)
+        peso+=int(grafo[v][1][indice])
+
+    #print("Peso: " + str(peso))
+    return(peso)
 
 ###### depth_first_searsh modificada para retornar o menor caminho ######
 def depth_dirst_search(dicionario, inicio, fim):
-    pilha = [(inicio, [inicio])]
-    pesoTesteAntes = 99999
-
-    pesoTeste = 0
-    menor_caminho = []
-    menor_peso = 0
-    while pilha:
-        vertice, caminho = pilha.pop()
-        for proximo in set(dicionario[vertice][0]) - set(caminho):
-            if proximo == fim:
-                pesoTeste = calcular_peso(list(caminho + [proximo]))
-                if pesoTeste < pesoTesteAntes:
-                    menor_peso = pesoTeste
-                    menor_caminho = list(caminho + [proximo])
-                    pesoTesteAntes = pesoTeste
-                break
-            else:
-                pilha.append((proximo, caminho + [proximo]))
-
-    return menor_caminho, menor_peso
+   pilha = [ (inicio, [inicio]) ]
+   #print(pilha)
+   pesoTesteAntes = 99999
+   pesoTeste=0
+   menor_caminho=[]
+   menor_peso=0
+   while pilha:
+       vertice, caminho = pilha.pop()
+       for proximo in set(dicionario[vertice][0]) - set(caminho):
+           if proximo == fim:
+               #print("camnho+proximo")
+               #print(caminho)
+               #print(proximo)
+               #print(list(caminho+[proximo]))
+               pesoTeste = calcular_peso(list(caminho+[proximo]))#3
+               if pesoTeste < pesoTesteAntes:
+                   menor_peso=pesoTeste
+                   menor_caminho = list(caminho+[proximo])
+                   pesoTesteAntes=pesoTeste
+               break
+           else:
+               pilha.append((proximo, caminho + [proximo]))
+   return menor_caminho,menor_peso
 
 # entrega exemplo
 # entregas = { 'vertice':['tempo_saida','lucro_da_entrega'],...}
@@ -110,38 +115,40 @@ def depth_dirst_search(dicionario, inicio, fim):
 #                    'C': [['B', 'D'], ['3', '8']], 'D': [['A', 'C'], ['2', '8']]}
 
 ######### REALIZAR ENTREGAS ############
-def calcular_tempo(vertice):
-    lucro = int(entregas[vertice][1])
-    menor_caminho, tempo = depth_dirst_search(grafo, 'A', vertice)
-    return lucro, 2 * tempo
+def calcular_tempo(tentativa):
+    origem = list(grafo.keys())[0]
+    lucro = int(entregas[tentativa][1])
+    menor_caminho, tempoIda = depth_dirst_search(grafo, origem, tentativa)#2
+    menor_caminho2, tempoVolta = depth_dirst_search(grafo, tentativa, origem)
+    print("Caminho Ida : " + str([tempoIda]+menor_caminho))
+    if(tempoIda!=tempoVolta):
+        print("Caminho Ida : " + str([tempoVolta]+menor_caminho2))
+    return lucro, tempoIda+tempoVolta
 
 def fazer_entrega():
-    caminhos_lucrativos = {}
-    caminhos_lucrativos2 = {}
-    entregas_keys = list(entregas.keys())
+    caminhos_lucrativos={}
+    caminhos_lucrativos2={}
+    entregas_keys = list(entregas.keys()) 
 
     try:
         for tentativa in entregas_keys:
             lucro_total = 0
             tempo_pass = 0
             caminho_lucro = []
-            lucro, tempo = calcular_tempo(tentativa)
-            tempo_pass += tempo
-            lucro_total += lucro
-
-            for fim in list(set(entregas_keys) - set([tentativa])):
-                # fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
+            lucro, tempo = calcular_tempo(tentativa)#1
+            tempo_pass+=tempo
+            lucro_total+=lucro
+            for fim in list(set(entregas_keys)-set([tentativa])): #fim é o vertice de destino na lista de entregas, exceto a origem qe já foi
 
                 tempo_saida = int(entregas[fim][0])
-
-                if (tempo_saida >= tempo_pass):
+                
+                if ( tempo_saida >= tempo_pass):
                     lucro, tempo = calcular_tempo(fim)
-                    tempo_pass += tempo
-                    lucro_total += lucro
+                    tempo_pass+=tempo
+                    lucro_total+=lucro
                     caminho_lucro += fim
-
-            caminhos_lucrativos[tentativa] = []
-            caminhos_lucrativos[tentativa] += [tentativa] + caminho_lucro + [lucro_total]
+            caminhos_lucrativos[tentativa]=[]
+            caminhos_lucrativos[tentativa] += [lucro_total] + [tentativa] + caminho_lucro
 
         print("Caminhos lucrativos : ")
         print(caminhos_lucrativos)
