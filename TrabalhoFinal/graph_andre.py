@@ -23,11 +23,13 @@ def ler_arquivo():
         for i in range(2, n + 2):
             pesos.append(vetor_ler[i].split(','))
             
-        # TRATA ARESTA COM VALOR NEGATIVO    
+        # TRATA ARESTA COM VALOR NEGATIVO E ARESTAS IGUAIS COM VALOR 0
         for i in range(0, len(pesos)):
             for x in range(0, len(pesos[i])):
                 if int(pesos[i][x]) < 0:
                     pesos[i][x] = str(0)
+                if int(pesos[i][i]) != 0:
+                    pesos[i][i] = str(0)
 
         for i in range(0, e):
             ler_entregas.append(vetor_ler[n + 3 + i].split(','))
