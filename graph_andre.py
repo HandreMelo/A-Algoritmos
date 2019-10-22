@@ -24,12 +24,10 @@ def ler_arquivo():
             pesos.append(vetor_ler[i].split(','))
             
         # TRATA ARESTA COM VALOR NEGATIVO    
-        # for i in range(0, len(pesos)):
-        #     for x in range(0, len(pesos[i])):
-        #         pesoAtual = int(pesos[i][x])
-        #         if pesoAtual < 0:
-        #             pesoAtual *= -1
-        #             pesos[i][x] = str(pesoAtual)
+        for i in range(0, len(pesos)):
+            for x in range(0, len(pesos[i])):
+                if int(pesos[i][x]) < 0:
+                    pesos[i][x] = str(0)
 
         for i in range(0, e):
             ler_entregas.append(vetor_ler[n + 3 + i].split(','))
