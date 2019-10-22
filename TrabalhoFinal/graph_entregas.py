@@ -114,7 +114,7 @@ def calcular_tempo(tentativa):
     menor_caminho2, tempoVolta = depth_dirst_search(grafo, tentativa, origem)
     print("Caminho Ida : " + str([tempoIda]+menor_caminho))
     if(tempoIda!=tempoVolta):
-        print("Caminho Ida : " + str([tempoVolta]+menor_caminho2))
+        print("Caminho Volta : " + str([tempoVolta]+menor_caminho2))
     return lucro, tempoIda+tempoVolta
 
 def fazer_entrega():
