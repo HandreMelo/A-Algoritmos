@@ -22,7 +22,8 @@ def ler_arquivo():
 
         for i in range(2, n + 2):
             pesos.append(vetor_ler[i].split(','))
-
+            
+        # TRATA ARESTA COM VALOR NEGATIVO    
         # for i in range(0, len(pesos)):
         #     for x in range(0, len(pesos[i])):
         #         pesoAtual = int(pesos[i][x])
