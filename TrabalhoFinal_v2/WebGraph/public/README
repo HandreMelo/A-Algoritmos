@@ -1,0 +1,15 @@
+-----------------------------------------------------------
+---Necessário para rodar CherryPy---
+* Python 3.5 à 3.7 para compatibilidade com o framework;
+
+---Instalação---
+Na linha de comando do pc digitar:
+pip install cherrypy
+Logo após estará pronto para uso.
+
+Para rodar um arquivo servidor:
+digitar na linha de comando: python nomedoarquivo.py
+
+Para mais tutoriais acessar endereço: 
+https://docs.cherrypy.org/en/latest/tutorials.html
+------------------------------------------------------------
