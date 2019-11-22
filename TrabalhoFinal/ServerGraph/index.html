@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="/static/css/style.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function() {
+
+       /* $("#generate-string").click(function(e){
+          $.ajax({
+            type: "POST",
+            url: "/lerArquivo",
+            data: {"length": $("input[name='length").val()}
+          })
+          .done(function(string){
+            $("#the-string").show();
+            $("#the-string input").val(string);
+            alert(string)
+          });
+          e.preventDefault();
+        }); */
+
+        $("#generate-string").click(function(e){
+          debugger
+          let form = document.getElementById("fileUpload").files[0];
+          let formData = new FormData();
+          formData.append("form",form);
+          $.ajax({ 
+            type: "POST",
+            contentType: false,
+            url: "/enviarArquivo",
+            processData: false,
+            data: form,
+          })
+          .done(function(volta){
+            $("#the-string").show();
+            $("#the-string input").val("volta");
+            alert("volta");
+          });
+          e.preventDefault();
+        });  
+
+        $("#replace-string").click(function(e) {
+          $.ajax({
+            type: "PUT",
+            url: "/alterarArquivo",
+            data: {"another_string": $("#the-string input").val()}
+          })
+          .done(function() {
+            alert("Replaced!");
+          });
+          e.preventDefault();
+        });
+
+        $("#delete-string").click(function(e) {
+          $.ajax({
+            type: "DELETE",
+            url: "/deletarArquivo"
+          })
+          .done(function() {
+            $("#the-string").hide();
+          });
+          e.preventDefault();
+        });
+
+      });
+    </script>
+  </head>
+  <body>
+    <!--<input type="text" value="8" name="length"/>-->
+    <input type="file" name="arquivo" id="fileUpload">
+    <button id="generate-string">Give it!</button>
+    <div id="the-string">
+      <input type="text" />
+      <button id="replace-string">Replace</button>
+      <button id="delete-string">Delete it</button>
+    </div>
+  </body>
+</html>
