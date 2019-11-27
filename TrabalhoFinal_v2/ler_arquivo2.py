@@ -1,12 +1,13 @@
 grafo = {}
 entregas = {}
 
-def ler_arquivo():
+def ler_arquivo():#O(n2)
     vetor_ler = []
 
     try:
+        #arquivo_destino = open('entrada-trabalho - complexa.csv', 'r')
         arquivo_destino = open('grafo.txt', 'r')
-        for linha in arquivo_destino:
+        for linha in arquivo_destino: #O(n)
             vetor_ler.append(linha.strip())
 
         arquivo_destino.close()
@@ -18,26 +19,26 @@ def ler_arquivo():
     except FileNotFoundError:
         print("Não encontrado arquivo especificado")
     
-    vetor_ler = limpar_formatacao_arquivo_lido(vetor_ler)
+    vetor_ler = limpar_formatacao_arquivo_lido(vetor_ler) #O(n)
     grafo, entregas = montar_grafo_do_arquivo(vetor_ler)
         
     return grafo,entregas
 
 def limpar_formatacao_arquivo_lido(vetor_ler):
     for i in range(len(vetor_ler)):
-        vetor_ler[i] = vetor_ler[i].replace("'", "").replace("‘", "").replace("’", "")
+        vetor_ler[i] = vetor_ler[i].replace("'", "").replace("‘", "").replace("’", "") #O(1)
     return vetor_ler
     
 def montar_grafo_do_arquivo(vetor_ler):
     
-    n_vertices,n_entregas,pesos,vertices = separar_dados_do_arquivo_lido(vetor_ler)
+    n_vertices,n_entregas,pesos,vertices = separar_dados_do_arquivo_lido(vetor_ler) #O(n) + O(n2)
     
     adjacentes = {}
     pesos_temp = {}
     
     #print(pesos)
     #print(vertices)
-    for i in range(n_vertices):
+    for i in range(n_vertices): #O(n2)
         for j in range(n_vertices):
             if int(pesos[i][j]) > 0:
                 adjacentes[vertices[j]] = 0
@@ -46,10 +47,10 @@ def montar_grafo_do_arquivo(vetor_ler):
         grafo[vertices[i]] = adjacentes
         adjacentes = {}
         pesos_temp = {}
-    print(grafo)
+    #print(grafo)
     return grafo,entregas
 
-def separar_dados_do_arquivo_lido(vetor_ler):
+def separar_dados_do_arquivo_lido(vetor_ler): #O(n)
     pesos = []
     vertices = []
     ler_entregas = []
