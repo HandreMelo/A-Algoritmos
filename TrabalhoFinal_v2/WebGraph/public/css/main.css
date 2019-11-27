@@ -1,0 +1,15 @@
+html, body{
+    height: 100%;
+    background-color: black !important;
+}
+
+h1{
+    text-color: white !important;
+}
+
+#container{
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    display: flex;  
+}
