@@ -1,78 +1,150 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-grafo = {}
-entregas = {}
+class Job:
+    def __init__(self, start, finish, profit, path):
+        self.start = start
+        self.finish = finish
+        self.profit = profit
+        self.path = path
 
 
-def ler_arquivo(file):  # O(n2)
-    vetor_ler = []
+########## DIJKSTRA ###############
 
-    try:
-        # arquivo_destino = open('entrada-trabalho - complexa.csv', 'r')
-        arquivo_destino = open(file, 'r')
-        for linha in arquivo_destino:  # O(n)
-            vetor_ler.append(linha.strip())
-
-        arquivo_destino.close()
-
-    except ValueError:
-        print("valor numérico inválido")
-    except IndexError:
-        print("matriz do arquivo não está no tamanho correto")
-    except FileNotFoundError:
-        print("Não encontrado arquivo especificado")
-
-    vetor_ler = limpar_formatacao_arquivo_lido(vetor_ler)  # O(n)
-    grafo, entregas = montar_grafo_do_arquivo(vetor_ler)
-
-    return grafo, entregas
+def dijkstra(graph, start, end):
+    queue, seen = [(0, start, [])], set()
+    while True:
+        (cost, v, path) = heapq.heappop(queue)
+        if v not in seen:
+            path = path + [v]
+            seen.add(v)
+            if v == end:
+                return cost, path
+            for (next, c) in graph[v].items():
+                heapq.heappush(queue, (cost + c, next, path))
 
 
-def limpar_formatacao_arquivo_lido(vetor_ler):
-    for i in range(len(vetor_ler)):
-        vetor_ler[i] = vetor_ler[i].replace("'", "").replace("‘", "").replace("’", "")  # O(1)
-    return vetor_ler
+##### MENORES CAMINHOS #####
+
+def menores_caminhos(entregas, graph, job):
+    inicio = list(graph.keys())[0];
+
+    for destino in entregas:  # O(e) * tudo abaixo
+        try:
+            tempo_ida, caminho_ida = dijkstra(graph, inicio, destino)  # O((n+m)*logn)
+
+            tempo_volta, caminho_volta = dijkstra(graph, destino, inicio)  # O(idem)
+            tempo_final = tempo_ida + tempo_volta  # O(1)
+            tempo_inicial = int(entregas[destino][0])  # O(1)
+            lucro_entrega = int(entregas[destino][1])  # O(1)
+            caminho = list([caminho_ida] + [caminho_volta])  # O(1)
+            job.append(Job(tempo_inicial, tempo_inicial + tempo_final, lucro_entrega, caminho))  # O(algo)
+        except:
+            print("Não há caminho para a entrega : ", destino, "\n")
+    return job
 
 
-def montar_grafo_do_arquivo(vetor_ler):
-    n_vertices, n_entregas, pesos, vertices = separar_dados_do_arquivo_lido(vetor_ler)  # O(n) + O(n2)
+##### PREDECESSOR ###########
 
-    adjacentes = {}
-    pesos_temp = {}
-
-    # print(pesos)
-    # print(vertices)
-    for i in range(n_vertices):  # O(n2)
-        for j in range(n_vertices):
-            if int(pesos[i][j]) > 0:
-                adjacentes[vertices[j]] = 0
-                adjacentes[vertices[j]] += int(pesos[i][j])
-                # pesos_temp.append(pesos[i][j])
-        grafo[vertices[i]] = adjacentes
-        adjacentes = {}
-        pesos_temp = {}
-    # print(grafo)
-    return grafo, entregas
+def Encontrar_Predecessor(job, start_index):  # wis O(nlogn) ou O(n2)
+    escolhido = 0
+    for i in range(0, start_index - 1):
+        if ((job[i].finish <= job[start_index].start) and (job[i].profit >= job[escolhido].profit)):
+            escolhido = i
+    return escolhido
 
 
-def separar_dados_do_arquivo_lido(vetor_ler):  # O(n)
-    pesos = []
-    vertices = []
-    ler_entregas = []
+########## WIS ###############
 
-    n_vertices = int(vetor_ler[0])
-    n_entregas = int(vetor_ler[n_vertices + 2])
+def schedule(job):
+    job = merge_sort(job)  # OK O(e log e)
+    for j in job:  # O(e)
+        print("Start :", j.start, " Finish :", j.finish, " Profit : ", j.profit)
+    pre = 0
+    n = len(job)
+    table_pre = [0 for _ in range(n)]  # p(J)
+    table_lucro = [0 for _ in range(n)]  # v(J)
+    table_max = [0 for _ in range(n)]  # M[J]
 
-    for i in range(2, n_vertices + 2):
-        pesos.append(vetor_ler[i].split(','))
+    ### esse eh o wis ###
+    for i in range(1, n):  # O(e)
+        table_lucro[i] = job[i].profit
+        pre = Encontrar_Predecessor(job, i)  # O(?)
+        if pre != 0:    table_pre[i] = pre
+        table_max[i] = max(table_lucro[i] + table_max[table_pre[i]], table_max[i - 1])  # O(1)
 
-    for i in range(0, n_entregas):
-        ler_entregas.append(vetor_ler[n_vertices + 3 + i].split(','))
+    print("Table lucro,Tabela pre, Tabela Max :")
+    print(table_lucro)
+    print(table_pre)
+    print(table_max)
 
-    for i in range(n_entregas):
-        entregas[ler_entregas[i][1]] = [ler_entregas[i][0], ler_entregas[i][2]]
+    # lucro_max,solution_list = Find_Solution(n-1,table_pre,table_lucro,table_max,job) #O(no slide)
+    lucro_max = 0
+    lista_lucro = Find_Solution(n - 1, table_pre, table_lucro, table_max, [])
+    for indice in lista_lucro:
+        lucro_max += int(job[indice].profit)
 
-    vertices.append(vetor_ler[1].split(','))
-    vertices = vertices[0]
+    return lucro_max, lista_lucro, job
 
-    return n_vertices, n_entregas, pesos, vertices
+
+# versão do prof. recursivo
+########## FIND SOLUTION ###########
+
+def Find_Solution(j, table_pre, table_lucro, table_max, lista_lucro):  # O(n)
+    if (j == 0):  # or cont >= j):
+        print("fim")
+        return lista_lucro
+    elif ((table_lucro[j] + table_max[table_pre[j]]) > table_max[j - 1]):
+        # print(j)
+        lista_lucro.append(j)
+        return Find_Solution(table_pre[j], table_pre, table_lucro, table_max, lista_lucro)
+    else:
+        return Find_Solution(j - 1, table_pre, table_lucro, table_max, lista_lucro)
+
+
+########## MERGE SORT ###############
+
+def merge(llist, rlist):
+    final = []
+    while llist or rlist:
+        # This verification is necessary for not try to compare
+        # a NoneType with a valid type.
+        if len(llist) and len(rlist):
+            if llist[0].finish < rlist[0].finish:
+                final.append(llist.pop(0))
+            else:
+                final.append(rlist.pop(0))
+        if not len(llist):
+            if len(rlist): final.append(rlist.pop(0))
+
+        if not len(rlist):
+            if len(llist): final.append(llist.pop(0))
+
+    return final
+
+
+def merge_sort(list):
+    if len(list) < 2: return list
+    mid = len(list) // 2
+    return merge(merge_sort(list[:mid]), merge_sort(list[mid:]))
+
+import heapq
+# if __name__ == "__main__":
+#     import heapq
+#     import ler_arquivo2
+#
+#     graph, entregas = ler_arquivo2.ler_arquivo()  # o(n2)
+#     print("Grafo\n", graph)
+#     print("Entregas\n", entregas, "\n")
+#     job = []
+#     job = menores_caminhos(entregas, graph, job)  # O(e)*(2*(O((n+m)*logn))
+#     job.append(Job(0, 0, 0, []))
+#     # (start, finish, profit, path)
+#
+#     lucro_max, lucro_list, job = schedule(job)
+#
+#     print("Entregas realizadas : ", len(lucro_list))
+#
+#     for indice in lucro_list:
+#         print("Para :", job[indice].path[0][-1], "Path : ", job[indice].path[0], "Com lucro = ", job[indice].profit)
+#         print("Tempo de inicio : ", job[indice].start, " e tempo final ", job[indice].finish)
+#     print("Totalizando : ", lucro_max, " de lucro")
+
+    # print(Mod(graph).gr)

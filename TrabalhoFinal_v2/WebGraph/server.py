@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import os, os.path
 import random
 import string
@@ -24,9 +21,19 @@ class StringGenerator(object):
     def enviarArquivo(self, ufile):
         upload_path = os.path.dirname(__file__)
 
-        grafo, entregas = graphLogic.ler_arquivo(ufile)
+        grafo, entregas = lerArquivo.ler_arquivo(ufile)
         grafoJson = json.dumps(grafo)
         entregaJs = json.dumps(entregas)
+        job = []
+        job = graphLogic.menores_caminhos(entregas, grafo, job)
+        job.append(graphLogic.Job(0, 0, 0, []))
+
+        lucro_max, lucro_list, job = graphLogic.schedule(job)
+        entrega_realizada = len(lucro_list)
+        dic_lucros = {}
+        for indice in lucro_list:
+            dic_lucros = str(job[indice].path[0][-1])
+
         out = '''
         <!DOCTYPE html>
         <html lang="en" xmlns:p="http://www.w3.org/1999/html">
@@ -62,14 +69,9 @@ class StringGenerator(object):
                 <p id="grafo">%s</p>
                 <p id="entregas">Entregas:</p>
                 <p>%s</p>
-                <script>
-                    var grafo = document.getElementById('grafo').innerHTML;
-                    var graphJs = JSON.parse(grafo);
-                    console.log(graphJs);
-                    for (var [key, value] of graphJs){
-                        console.log(key + " -- "+ value);
-                    }
-                </script>
+                <p>Entregas realizadas: %s</p>
+                <p>Lucro maximo: %s</p>
+                <p>lucros: %s</p>
                 <script src="/static/js/jquery.js"></script>
                 <script src="/static/sigma.js-1.2.1/src/sigma.core.js"></script>
                 <script src="/static/sigma.js-1.2.1/src/conrad.js"></script>
@@ -121,7 +123,7 @@ class StringGenerator(object):
             </body>
         </html>
         '''
-        return out % (str(grafoJson), str(entregaJs))
+        return out % (str(grafoJson), str(entregaJs), str(entrega_realizada), str(lucro_max), str(dic_lucros))
 
     @cherrypy.expose
     def alterarArquivo(self, another_string):
@@ -136,6 +138,7 @@ if __name__ == '__main__':
 
     import json
     import networkx as nx
+    import lerArquivo
     import graphLogic
     conf = {
         '/': {

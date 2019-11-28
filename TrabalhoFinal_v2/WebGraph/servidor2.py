@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
-import graphLogic
+import lerArquivo
 import os, os.path
 import random
 import string
@@ -42,7 +42,7 @@ class StringGenerator(object):
     def enviarArquivo(self, ufile):
         upload_path = os.path.dirname(__file__)
 
-        grafo, entregas = graphLogic.ler_arquivo(ufile)
+        grafo, entregas = lerArquivo.ler_arquivo(ufile)
         grafoJson = json.dumps(entregas)
         plotGraphGenerator()
         return grafoJson
