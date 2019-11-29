@@ -3,10 +3,6 @@ html, body{
     background-color: black !important;
 }
 
-h1{
-    text-color: white !important;
-}
-
 #container{
     height: 100%;
     text-align: center;

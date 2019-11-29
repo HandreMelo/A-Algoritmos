@@ -31,9 +31,11 @@ class StringGenerator(object):
         lucro_max, lucro_list, job = graphLogic.schedule(job)
         entrega_realizada = len(lucro_list)
         dic_lucros = {}
+        i = 0
         for indice in lucro_list:
-            dic_lucros = str(job[indice].path[0][-1])
-
+            dic_lucros[i] = job[indice].path[0]
+            i+=1
+        dic_lucrosJs = json.dumps(dic_lucros)
         out = '''
         <!DOCTYPE html>
         <html lang="en" xmlns:p="http://www.w3.org/1999/html">
@@ -50,10 +52,10 @@ class StringGenerator(object):
                   <div id="container">
                     <div class="container text-white">
                         <div id="svg">
-                            <div class="label text-center">Alg. Dijkistra</div>
+                            <div class="label text-center">Grafo entregas Feitas</div>
                           </div>
                           <div id="canvas">
-                            <div class="label text-center">Alg. Genético</div>
+                            <div class="label text-center">Grafo</div>
                         </div>          
                     </div>
                   </div>
@@ -71,7 +73,8 @@ class StringGenerator(object):
                 <p>%s</p>
                 <p>Entregas realizadas: %s</p>
                 <p>Lucro maximo: %s</p>
-                <p>lucros: %s</p>
+                <p>lucros: </p>
+                <p id="caminho_entregado">%s</p>
                 <script src="/static/js/jquery.js"></script>
                 <script src="/static/sigma.js-1.2.1/src/sigma.core.js"></script>
                 <script src="/static/sigma.js-1.2.1/src/conrad.js"></script>
@@ -120,10 +123,11 @@ class StringGenerator(object):
                 <script src="/static/sigma.js-1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
                 <script src="/static/sigma.js-1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
                 <script type="text/javascript" src="/static/js/grafo.js"></script>
+                <script type="text/javascript" src="/static/js/grafoTwo.js"></script>
             </body>
         </html>
         '''
-        return out % (str(grafoJson), str(entregaJs), str(entrega_realizada), str(lucro_max), str(dic_lucros))
+        return out % (str(grafoJson), str(entregaJs), str(entrega_realizada), str(lucro_max), str(dic_lucrosJs))
 
     @cherrypy.expose
     def alterarArquivo(self, another_string):
