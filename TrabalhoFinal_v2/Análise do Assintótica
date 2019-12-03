@@ -20,8 +20,7 @@ schedule(){
 }
 mostrar caminhos lucrativos, linha 140, O(e)
 
-TOTAL = O(n) + O(e)*(2 O(( n + m)*log n) + O(1)) + O(e log e)
-+ O(e) + 3O(2) + O(e) + O(e log e) + O(1) + O(e) + O(e) + O(e)
+TOTAL = O(n2) + O(n) + O(e)*(2 O(( n + m)*log n) + O(1)) + O(e log e) + O(e) + 3*O(2) + O(e) + O(e log e) + O(1) + O(e) + O(e) + O(e)
 = O(n) + O(e)*(2*O((n+m)*logn)) + 2*O(e log e) + 5*O(e)
 = 2*O(nlogn)*O(e) + 2*O(mlogn)*O(e) + 2*(O(e)*O(loge)) + 5*O(e)
 =O(e)*(2*O(nlogn) + 2*O(mlogn) + 2*O(log e) + 5)
