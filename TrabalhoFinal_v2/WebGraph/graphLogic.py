@@ -43,13 +43,13 @@ def menores_caminhos(entregas, graph, job):
 
 ##### PREDECESSOR ###########
 
-def Encontrar_Predecessor(job, start_index):  # wis O(nlogn) ou O(n2)
+def Encontrar_Predecessor(job,start_index): # O(nlogn) ou O(n2)
     escolhido = 0
-    for i in range(0, start_index - 1):
-        if ((job[i].finish <= job[start_index].start) and (job[i].profit >= job[escolhido].profit)):
-            escolhido = i
+    for i in reversed(range(0,start_index)):
+        print(":",i)
+        if job[i].finish <= job[start_index].start:
+            return i
     return escolhido
-
 
 ########## WIS ###############
 
