@@ -1,0 +1,30 @@
+ler_arquivo(),linha 128 chama arquivo externo, O(n2)
+menores_caminhos(), linha 132 chama linha 24
+{
+	inicio = list(), linha 25, O(n)
+	for destino in entregas, linha 27, O(e)*
+	{
+		dijkstra(), linha 29 chama linha 10, 2*O((n+m)*log n)
+		outros 6*O(1)
+	}
+}
+schedule(){
+ job = merge_sort(), linha 55 chama linha 101, O(e log e)
+ imprimir lista de jobs,linha 56, print(job) O(e)
+ preencher tabelas com 0, linha 60, 3*O(e)
+ preencher tabela_lucro, linha 66, O(e)
+ Encontrar_Predecessor(), linha 67 chama linha 43, O(e)*O(e log e) ou O(e log e), por não fazer todos todas as vezes.
+ table_max[], linha 70, O(1)
+ Find_solution(), linha 79 chama linha 88, O(e)
+ mostrar lucro total, linha 80, O(e)
+}
+mostrar caminhos lucrativos, linha 140, O(e)
+
+TOTAL = O(n) + O(e)*(2 O(( n + m)*log n) + O(1)) + O(e log e)
++ O(e) + 3O(2) + O(e) + O(e log e) + O(1) + O(e) + O(e) + O(e)
+= O(n) + O(e)*(2*O((n+m)*logn)) + 2*O(e log e) + 5*O(e)
+= 2*O(nlogn)*O(e) + 2*O(mlogn)*O(e) + 2*(O(e)*O(loge)) + 5*O(e)
+=O(e)*(2*O(nlogn) + 2*O(mlogn) + 2*O(log e) + 5)
+Então, O(e * (n + m) * log n) ### ou O(e * ((n + m) * log n) + 5)
+o que pode se tornar O(n * (n + n2) * log n) = O((n3 + n2) * log n)
+	
