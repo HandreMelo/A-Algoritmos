@@ -33,7 +33,7 @@ def menores_caminhos(entregas,graph,job):
             tempo_inicial = int(entregas[destino][0])#O(1)
             lucro_entrega = int(entregas[destino][1])#O(1)
             caminho = list([caminho_ida] + [caminho_volta])#O(1)
-            job.append(Job(tempo_inicial, tempo_inicial + tempo_final, lucro_entrega, caminho))#O(algo)
+            job.append(Job(tempo_inicial, tempo_inicial + tempo_final, lucro_entrega, caminho))#O(1)
         except:
             print("Não há caminho para a entrega : ",destino,"\n")
     return job
@@ -43,6 +43,7 @@ def menores_caminhos(entregas,graph,job):
 def Encontrar_Predecessor(job,start_index): # O(nlogn) ou O(n2)
     escolhido = 0
     for i in reversed(range(0,start_index)):
+        #print(":",i)
         if job[i].finish <= job[start_index].start:
             return i
     return escolhido
@@ -64,7 +65,8 @@ def schedule(job):
     for i in range(1,n): #O(e)
         table_lucro[i] = job[i].profit
         pre = Encontrar_Predecessor(job,i) #O(?)
-        if pre != 0:    table_pre[i] = pre
+        if pre != 0:
+            table_pre[i] = pre
         table_max[i] = max(table_lucro[i] + table_max[table_pre[i]], table_max[i - 1]) #O(1)
 
     print("Table lucro,Tabela pre, Tabela Max :")
@@ -83,7 +85,7 @@ def schedule(job):
 #versão do prof. recursivo
 ########## FIND SOLUTION ###########
 
-def Find_Solution(j,table_pre,table_lucro,table_max,lista_lucro): #O(n)
+def Find_Solution(j,table_pre,table_lucro,table_max,lista_lucro): #O(e)
     if (j == 0):# or cont >= j):
         print("fim")
         return lista_lucro
@@ -122,24 +124,35 @@ def merge_sort(list):
 if __name__ == "__main__":
     import heapq
     import ler_arquivo2
-    
-    graph,entregas = ler_arquivo2.ler_arquivo() #o(n2)
-    print("Grafo\n", graph)
-    print("Entregas\n", entregas,"\n")
-    job = []
-    job = menores_caminhos(entregas,graph,job) #O(e)*(2*(O((n+m)*logn))
-    job.append(Job(0,0,0,[]))
-    #(start, finish, profit, path)
-    
-    lucro_max, lucro_list, job = schedule(job)
-
-    print("Entregas realizadas : ", len(lucro_list))
-    
-    for indice in lucro_list:
-        print("Para :", job[indice].path[0][-1], "Path : ", job[indice].path[0], "Com lucro = ", job[indice].profit)
-        print("Tempo de inicio : ",job[indice].start, " e tempo final ", job[indice].finish)
-    print("Totalizando : ", lucro_max," de lucro")
+    while(1):
+        arquivo = ''
+        print("Digite o caminho para seu arquivo : ")
+        arquivo = input(arquivo)
+        print(arquivo)
+        try:
+            graph,entregas = ler_arquivo2.ler_arquivo(arquivo) #O(n2)
+        except:
+            print("Nao foi possivel manipular o arquivo")
+            continue
+        print("Grafo\n", graph)
+        print("Entregas\n", entregas,"\n")
+        job = []
+        job = menores_caminhos(entregas,graph,job) #O(e)*(2*(O((n+m)*logn))
+        job.append(Job(0,0,0,[]))
+        #(start, finish, profit, path)
         
+        lucro_max, lucro_list, job = schedule(job)
+
+        print("Entregas realizadas : ", len(lucro_list))
+        caminhos_lucrativos = ''
+        for indice in lucro_list:
+            caminhos_lucrativos += str(job[indice].path)
+            print("Para :", job[indice].path[0][-1], "Path : ", job[indice].path[0], "Com lucro = ", job[indice].profit)
+            print("Tempo de inicio : ",job[indice].start, " e tempo final ", job[indice].finish)
+        print("Totalizando : ", lucro_max," de lucro")
+        print(caminhos_lucrativos)
+        graph.clear()
+        entregas.clear()
+    '''
     #print(Mod(graph).gr)
-
-
+    '''
